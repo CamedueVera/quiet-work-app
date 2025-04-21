@@ -28,6 +28,11 @@ export default {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'
 				},
+        focus: {
+          blue: '#3B82F6',
+          purple: '#D6BCFA',
+          teal: '#0D9488',
+        },
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
 					foreground: 'hsl(var(--secondary-foreground))'
