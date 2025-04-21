@@ -33,6 +33,33 @@ export type Database = {
         }
         Relationships: []
       }
+      user_preferences: {
+        Row: {
+          break_duration: number | null
+          dark_mode: boolean | null
+          id: string
+          music_preference: string | null
+          timer_duration: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          break_duration?: number | null
+          dark_mode?: boolean | null
+          id: string
+          music_preference?: string | null
+          timer_duration?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          break_duration?: number | null
+          dark_mode?: boolean | null
+          id?: string
+          music_preference?: string | null
+          timer_duration?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

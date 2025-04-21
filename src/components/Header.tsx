@@ -1,11 +1,13 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, User } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function Header() {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const { user, signOut } = useAuth();
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -28,13 +30,27 @@ export function Header() {
           {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
         </Button>
         
-        <Link to="/login">
-          <Button variant="outline">Log in</Button>
-        </Link>
-        
-        <Link to="/signup">
-          <Button>Sign up</Button>
-        </Link>
+        {user ? (
+          <>
+            <Link to="/profile">
+              <Button variant="ghost" size="icon">
+                <User size={20} />
+              </Button>
+            </Link>
+            <Button variant="outline" onClick={() => signOut()}>
+              Abmelden
+            </Button>
+          </>
+        ) : (
+          <>
+            <Link to="/login">
+              <Button variant="outline">Anmelden</Button>
+            </Link>
+            <Link to="/signup">
+              <Button>Registrieren</Button>
+            </Link>
+          </>
+        )}
       </div>
     </header>
   );
