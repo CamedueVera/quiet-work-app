@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +15,7 @@ type UserPreferences = {
   dark_mode: boolean;
 };
 
-export function ProfileSettings() {
+const Profile = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [preferences, setPreferences] = useState<UserPreferences>({
@@ -47,7 +46,7 @@ export function ProfileSettings() {
       if (error) throw error;
       if (data) setPreferences(data);
     } catch (error) {
-      console.error("Error loading preferences:", error);
+      console.error("Fehler beim Laden der Präferenzen:", error);
     }
   };
 
@@ -65,7 +64,7 @@ export function ProfileSettings() {
         setLastName(data.last_name || "");
       }
     } catch (error) {
-      console.error("Error loading profile:", error);
+      console.error("Fehler beim Laden des Profils:", error);
     }
   };
 
@@ -85,7 +84,8 @@ export function ProfileSettings() {
         })
         .eq("id", user?.id);
 
-      if (preferencesError || profileError) throw preferencesError || profileError;
+      if (preferencesError || profileError)
+        throw preferencesError || profileError;
 
       toast({
         title: "Einstellungen gespeichert",
@@ -103,7 +103,7 @@ export function ProfileSettings() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="max-w-3xl mx-auto py-12 px-4 space-y-10">
       <div className="space-y-4">
         <h2 className="text-xl font-semibold">Persönliche Informationen</h2>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -137,10 +137,12 @@ export function ProfileSettings() {
               min="1"
               max="60"
               value={preferences.timer_duration}
-              onChange={(e) => setPreferences(prev => ({
-                ...prev,
-                timer_duration: parseInt(e.target.value)
-              }))}
+              onChange={(e) =>
+                setPreferences((prev) => ({
+                  ...prev,
+                  timer_duration: parseInt(e.target.value),
+                }))
+              }
             />
           </div>
           <div className="space-y-2">
@@ -151,10 +153,12 @@ export function ProfileSettings() {
               min="1"
               max="30"
               value={preferences.break_duration}
-              onChange={(e) => setPreferences(prev => ({
-                ...prev,
-                break_duration: parseInt(e.target.value)
-              }))}
+              onChange={(e) =>
+                setPreferences((prev) => ({
+                  ...prev,
+                  break_duration: parseInt(e.target.value),
+                }))
+              }
             />
           </div>
         </div>
@@ -164,10 +168,12 @@ export function ProfileSettings() {
         <h2 className="text-xl font-semibold">Musik Präferenzen</h2>
         <RadioGroup
           value={preferences.music_preference}
-          onValueChange={(value) => setPreferences(prev => ({
-            ...prev,
-            music_preference: value
-          }))}
+          onValueChange={(value) =>
+            setPreferences((prev) => ({
+              ...prev,
+              music_preference: value,
+            }))
+          }
         >
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="lofi" id="lofi" />
@@ -190,10 +196,12 @@ export function ProfileSettings() {
           <Switch
             id="darkMode"
             checked={preferences.dark_mode}
-            onCheckedChange={(checked) => setPreferences(prev => ({
-              ...prev,
-              dark_mode: checked
-            }))}
+            onCheckedChange={(checked) =>
+              setPreferences((prev) => ({
+                ...prev,
+                dark_mode: checked,
+              }))
+            }
           />
           <Label htmlFor="darkMode">Dark Mode</Label>
         </div>
@@ -204,4 +212,6 @@ export function ProfileSettings() {
       </Button>
     </div>
   );
-}
+};
+
+export default Profile;
