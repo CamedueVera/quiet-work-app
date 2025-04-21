@@ -1,5 +1,5 @@
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun, User } from "lucide-react";
 import { useState } from "react";
@@ -8,10 +8,19 @@ import { useAuth } from "@/contexts/AuthContext";
 export function Header() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
     // In a future implementation, we would toggle the actual dark mode
+  };
+
+  const handleProfileClick = () => {
+    if (user) {
+      navigate('/profile');
+    } else {
+      navigate('/login');
+    }
   };
 
   return (
@@ -32,11 +41,14 @@ export function Header() {
         
         {user ? (
           <>
-            <Link to="/profile">
-              <Button variant="ghost" size="icon">
-                <User size={20} />
-              </Button>
-            </Link>
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={handleProfileClick}
+              aria-label="Profil öffnen"
+            >
+              <User size={20} />
+            </Button>
             <Button variant="outline" onClick={() => signOut()}>
               Abmelden
             </Button>
