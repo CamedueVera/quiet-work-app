@@ -6,25 +6,35 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/components/ui/use-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  
+  const { signIn } = useAuth();
+  const { toast } = useToast();
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Normally, this would use Supabase authentication
-    // This is just a placeholder for now
-    console.log("Login attempted with:", email);
-    
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      await signIn(email, password);
+      toast({
+        title: "Welcome back!",
+        description: "Successfully logged in.",
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error logging in",
+        description: error.message,
+      });
+    } finally {
       setIsLoading(false);
-      alert("Please integrate Supabase to enable authentication");
-    }, 1000);
+    }
   };
   
   return (
@@ -54,15 +64,7 @@ const Login = () => {
             </div>
             
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                <Link 
-                  to="/forgot-password" 
-                  className="text-sm text-focus-blue hover:underline"
-                >
-                  Forgot password?
-                </Link>
-              </div>
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -73,7 +75,7 @@ const Login = () => {
               />
             </div>
             
-            <Button type="submit" className="w-full bg-focus-blue hover:bg-focus-blue/90" disabled={isLoading}>
+            <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Logging in..." : "Log in"}
             </Button>
           </form>
@@ -83,26 +85,6 @@ const Login = () => {
             <Link to="/signup" className="text-focus-blue hover:underline">
               Sign up
             </Link>
-          </div>
-          
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t"></div>
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
-                Or continue with
-              </span>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4">
-            <Button variant="outline" type="button" disabled>
-              Google
-            </Button>
-            <Button variant="outline" type="button" disabled>
-              Apple
-            </Button>
           </div>
         </div>
       </main>

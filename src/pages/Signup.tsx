@@ -6,26 +6,37 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/components/ui/use-toast";
 
 const Signup = () => {
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  
+  const { signUp } = useAuth();
+  const { toast } = useToast();
+
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Normally, this would use Supabase authentication
-    // This is just a placeholder for now
-    console.log("Signup attempted with:", email);
-    
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      await signUp(email, password, firstName, lastName);
+      toast({
+        title: "Account created!",
+        description: "Please check your email to verify your account.",
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error creating account",
+        description: error.message,
+      });
+    } finally {
       setIsLoading(false);
-      alert("Please integrate Supabase to enable authentication");
-    }, 1000);
+    }
   };
   
   return (
@@ -42,15 +53,28 @@ const Signup = () => {
           </div>
           
           <form onSubmit={handleSignup} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input
-                id="name"
-                placeholder="John Doe"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="firstName">First Name</Label>
+                <Input
+                  id="firstName"
+                  placeholder="John"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="lastName">Last Name</Label>
+                <Input
+                  id="lastName"
+                  placeholder="Doe"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                />
+              </div>
             </div>
             
             <div className="space-y-2">
@@ -74,13 +98,14 @@ const Signup = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                minLength={8}
               />
               <p className="text-xs text-muted-foreground">
                 Must be at least 8 characters long
               </p>
             </div>
             
-            <Button type="submit" className="w-full bg-focus-blue hover:bg-focus-blue/90" disabled={isLoading}>
+            <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Creating account..." : "Sign up"}
             </Button>
           </form>
@@ -90,26 +115,6 @@ const Signup = () => {
             <Link to="/login" className="text-focus-blue hover:underline">
               Log in
             </Link>
-          </div>
-          
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t"></div>
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
-                Or continue with
-              </span>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4">
-            <Button variant="outline" type="button" disabled>
-              Google
-            </Button>
-            <Button variant="outline" type="button" disabled>
-              Apple
-            </Button>
           </div>
         </div>
       </main>
